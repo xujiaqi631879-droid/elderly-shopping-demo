@@ -152,6 +152,66 @@ body {
   gap: 5rem;
 }
 
+/* 场景描述横幅 */
+.scene-banner {
+  margin: 4rem 4rem 0;
+  background: linear-gradient(135deg, #fff5f0, #fff);
+  border-left: 1.5rem solid #c62f2f;
+  border-radius: 4rem;
+  padding: 5rem;
+}
+.scene-banner .banner-title {
+  font-size: 7.5rem;
+  font-weight: 700;
+  color: #c62f2f;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+.scene-banner .banner-title .b-icon {
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7rem;
+  box-shadow: 0 0.5rem 2rem rgba(198,47,47,0.15);
+}
+.scene-banner .banner-desc {
+  font-size: 5.5rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+.scene-banner .banner-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.scene-banner .banner-cats span {
+  font-size: 4.8rem;
+  color: #c62f2f;
+  background: #fff0e8;
+  padding: 1.5rem 3rem;
+  border-radius: 6rem;
+  border: 0.3rem solid #ffe0d0;
+}
+.scene-card.hidden { display: none; }
+.empty-tip {
+  margin: 0 4rem;
+  padding: 12rem 4rem;
+  background: #fff;
+  border-radius: 4rem;
+  text-align: center;
+  color: #999;
+  font-size: 5rem;
+  display: none;
+}
+.empty-tip.show { display: block; }
+
 /* 场景卡片 */
 .scene-card {
   background: #fff;
@@ -345,30 +405,20 @@ body {
 </div>
 
 <!-- 筛选标签 -->
-<div class="filter-tabs">
-  <div class="tab-item active">
-    <div class="tab-icon"><span>⭐</span></div>
-    <div class="tab-label">推荐</div>
+<div class="filter-tabs" id="filterTabs"></div>
+
+<!-- 当前场景描述横幅 -->
+<div class="scene-banner" id="sceneBanner">
+  <div class="banner-title">
+    <div class="b-icon" id="bannerIcon">⭐</div>
+    <span id="bannerName">推荐</span>
   </div>
-  <div class="tab-item">
-    <div class="tab-icon"><span>👔</span></div>
-    <div class="tab-label">舒适穿着</div>
-  </div>
-  <div class="tab-item">
-    <div class="tab-icon"><span>🥗</span></div>
-    <div class="tab-label">健康饮食</div>
-  </div>
-  <div class="tab-item">
-    <div class="tab-icon"><span>🏠</span></div>
-    <div class="tab-label">居家便利</div>
-  </div>
-  <div class="tab-item">
-    <div class="tab-icon"><span>🚶</span></div>
-    <div class="tab-label">出行辅助</div>
-  </div>
+  <div class="banner-desc" id="bannerDesc">为您精选适老化好物，贴近老人日常需求，点击下方场景标签切换。</div>
+  <div class="banner-cats" id="bannerCats"></div>
 </div>
 
-<!-- 场景化内容导购 -->
+<!-- 场景化内容导购（占位示意：所有筛选下都展示这4张卡片） -->
+<div class="placeholder-tip" style="margin:0 4rem 0;padding:3rem 4rem;font-size:4.5rem;color:#999;background:#faf6f1;border-radius:3rem;text-align:center;">下方为占位示意卡片，实际场景将匹配对应商品</div>
 <div class="content-feed">
 
   <!-- 卡片1: 舒适穿着 - 老人穿鞋推荐 -->
@@ -478,13 +528,66 @@ body {
 </div>
 
 <script>
-// 标签切换交互
-document.querySelectorAll('.tab-item').forEach(tab => {
-  tab.addEventListener('click', function() {
-    document.querySelector('.tab-item.active').classList.remove('active');
-    this.classList.add('active');
-  });
+// 30个美好生活场景配置
+const SCENES = [
+  { icon: '⭐', name: '推荐', desc: '为您精选适老化好物，贴近老人日常需求，覆盖居家、健康、出行、滋补全场景。', cats: ['爆款好物','场景精选','热卖榜单'] },
+  { icon: '🌙', name: '安心起夜', desc: '夜间起身有柔和灯光陪伴，行动更从容。', cats: ['感应夜灯','地脚灯','床边扶手','防滑拖鞋'] },
+  { icon: '🚿', name: '舒心沐浴', desc: '在家也能享受安全、省力、放松的沐浴体验。', cats: ['洗澡椅','浴室扶手','防滑地垫','恒温花洒'] },
+  { icon: '🚽', name: '从容如厕', desc: '日常如厕更稳当、更省力，提升居家舒适感。', cats: ['马桶扶手','马桶增高垫','移动坐便椅'] },
+  { icon: '🛏️', name: '轻松起居', desc: '起床、翻身、上下床更顺手，卧室生活更自在。', cats: ['床边扶手','防坠床护栏','加高床垫','起身助力器'] },
+  { icon: '🌿', name: '清新老人房', desc: '房间、衣物、床品保持清爽洁净，居住更舒适。', cats: ['除味喷雾','空气净化器','除菌清洁','护理湿巾'] },
+  { icon: '🔔', name: '独居安心', desc: '子女远程关心，老人独自在家也更有安全感。', cats: ['一键呼叫器','门磁报警器','看护摄像头','跌倒报警器'] },
+  { icon: '🍳', name: '省心厨房', desc: '做饭、烧水、煲汤更简单，日常饮食更有烟火气。', cats: ['大按键电饭煲','语音电热水壶','电炖锅','省力开瓶器'] },
+  { icon: '🔍', name: '清晰阅读', desc: '看书、看手机、做手工更清楚，保留日常兴趣。', cats: ['带灯放大镜','老花镜','大字台灯','防蓝光眼镜'] },
+  { icon: '🤲', name: '灵巧生活', desc: '穿衣、取物、修剪、收纳更顺手，减少弯腰费力。', cats: ['长柄取物夹','穿袜器','超长鞋拔','大字指甲刀'] },
+  { icon: '🛡️', name: '温馨防护', desc: '居家边角更柔和，家里活动更安心。', cats: ['防撞护角','防撞条','圆角家具','防滑地垫'] },
+  { icon: '💗', name: '每日血压管理', desc: '在家轻松记录身体状态，健康变化心中有数。', cats: ['大屏语音血压计','血压记录本','健康手环'] },
+  { icon: '🩸', name: '日常血糖管理', desc: '饮食和指标一起管理，吃得更安心。', cats: ['血糖仪','试纸','无糖食品','低GI主食'] },
+  { icon: '🫁', name: '呼吸养护', desc: '居家呼吸养护更方便，日常状态更稳定。', cats: ['制氧机','雾化器','血氧仪','呼吸训练器'] },
+  { icon: '💆', name: '肩颈舒缓', desc: '居家放松肩颈腰背，缓解一天疲劳。', cats: ['按摩披肩','热敷护腰','护膝','理疗仪'] },
+  { icon: '🦵', name: '关节养护', desc: '散步、上下楼、日常活动更轻快。', cats: ['护膝','艾草热敷贴','氨糖软骨素','助行手杖'] },
+  { icon: '😴', name: '好眠休息', desc: '睡前放松身体，营造温暖舒适的睡眠氛围。', cats: ['热敷枕','泡脚桶','助眠按摩仪','保暖睡衣'] },
+  { icon: '🛁', name: '泡脚养生', desc: '每天泡泡脚，享受居家养生的小仪式。', cats: ['恒温足浴桶','艾草泡脚包','足底按摩器'] },
+  { icon: '👂', name: '清楚沟通', desc: '听得更清楚，和家人聊天、看电视更轻松。', cats: ['助听器','扩音耳机','大音量电话'] },
+  { icon: '🍰', name: '控糖轻食', desc: '想吃点心也能更安心，兼顾口感和健康管理。', cats: ['无糖糕点','无糖麦片','魔芋面','低糖软食'] },
+  { icon: '🥣', name: '软糯好食', desc: '口感软糯、好消化，日常三餐更省心。', cats: ['软糕点','软粥','山药粉','即食营养糊'] },
+  { icon: '🥛', name: '营养补充', desc: '每天补充营养，帮助维持活力状态。', cats: ['中老年奶粉','高钙羊奶粉','蛋白粉','益生菌'] },
+  { icon: '🍲', name: '康养膳食', desc: '康复调养期吃得更精细、更有营养。', cats: ['即食海参','营养粥','软烂主食','滋补汤品'] },
+  { icon: '🧥', name: '温暖穿搭', desc: '穿得暖、穿得舒服，也穿得体面好看。', cats: ['开襟保暖内衣','加绒马甲','宽松棉服','护膝秋裤'] },
+  { icon: '👟', name: '轻松散步', desc: '饭后散步、公园遛弯更稳、更舒适。', cats: ['防滑老人鞋','健步鞋','四脚拐杖','助行器'] },
+  { icon: '🛒', name: '买菜遛弯', desc: '出门买菜、社区活动更轻便自在。', cats: ['带座助步车','买菜手推车','折叠拐杖凳'] },
+  { icon: '♿', name: '便捷短途出行', desc: '去医院、逛公园、走亲访友更方便。', cats: ['轻便轮椅','电动轮椅','折叠代步车'] },
+  { icon: '🦯', name: '稳稳出行', desc: '日常行走更有支撑，外出更安心。', cats: ['防摔护髋','防滑手杖','防摔气囊马甲','防滑鞋'] },
+  { icon: '🛌', name: '舒适照护', desc: '居家照护更省心，日常护理更体面。', cats: ['护理床','防褥疮垫','翻身枕','床上洗头盆'] },
+  { icon: '🧻', name: '清爽护理', desc: '日常护理保持干爽洁净，提升生活舒适度。', cats: ['成人纸尿裤','拉拉裤','隔尿垫','护理湿巾'] },
+  { icon: '🎁', name: '孝心好礼', desc: '给爸妈选一份实用、贴心、能长期使用的礼物。', cats: ['血压计','足浴桶','老人鞋','感应夜灯','助听器','营养品'] },
+];
+
+// 渲染筛选标签
+const tabsEl = document.getElementById('filterTabs');
+SCENES.forEach((s, i) => {
+  const t = document.createElement('div');
+  t.className = 'tab-item' + (i === 0 ? ' active' : '');
+  t.innerHTML = `<div class="tab-icon"><span>${s.icon}</span></div><div class="tab-label">${s.name}</div>`;
+  t.addEventListener('click', () => selectScene(i, t));
+  tabsEl.appendChild(t);
 });
+
+function selectScene(i, el) {
+  document.querySelectorAll('.tab-item').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+  const s = SCENES[i];
+  document.getElementById('bannerIcon').textContent = s.icon;
+  document.getElementById('bannerName').textContent = s.name;
+  document.getElementById('bannerDesc').textContent = s.desc;
+  const catsEl = document.getElementById('bannerCats');
+  catsEl.innerHTML = s.cats.map(c => `<span>${c}</span>`).join('');
+  // 滚动选中项到可见区域
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+
+// 初始化默认场景
+selectScene(0, tabsEl.firstChild);
 </script>
 </body>
 </html>
