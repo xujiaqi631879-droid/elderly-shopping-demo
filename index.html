@@ -35,113 +35,110 @@ body {
 }
 .header .top-bar {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 4rem;
 }
 .header .brand {
-  font-size: 8rem;
+  font-size: 9rem;
   font-weight: 700;
   color: #fff;
+  letter-spacing: 0.5rem;
 }
 .header .sub-text {
   font-size: 5.5rem;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.85);
 }
-.search-bar {
-  position: relative;
-  z-index: 1;
-}
-.search-input {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  border-radius: 8rem;
-  padding: 3rem 4rem;
-  gap: 3rem;
-}
-.search-input .icon {
-  width: 6rem;
-  height: 6rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.search-input .icon svg { width: 100%; height: 100%; }
-.search-input input {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 6.8rem;
-  color: #999;
-  background: transparent;
-}
-.search-input .voice-btn {
-  width: 8rem;
-  height: 8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.search-input .voice-btn svg { width: 6rem; height: 6rem; }
 
-/* 筛选标签栏 - 横向滚动 */
-.filter-tabs {
+/* 筛选金刚位 - 双列横滑 */
+.filter-grid-wrap {
   position: sticky;
   top: 0;
   z-index: 99;
-  background: #f5f0eb;
-  display: flex;
-  padding: 4rem 3rem;
-  gap: 3rem;
+  background: #fff;
+  padding: 5rem 0 4rem;
+  box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.04);
+}
+.filter-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-columns: 25.4rem; /* 5 列贴合 393px：(131rem - 4rem padding) / 5 */
+  gap: 4rem 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.05);
+  padding: 0 2rem;
 }
-.filter-tabs::-webkit-scrollbar { display: none; }
-.tab-item {
+.filter-grid::-webkit-scrollbar { display: none; }
+.kongo-item {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
-  padding: 3rem 5rem;
-  transition: all 0.3s;
-  background: #fff;
-  border-radius: 12rem;
-  border: 0.5rem solid #e8e3de;
-  flex-shrink: 0;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.tab-item .tab-icon {
-  width: 11rem;
-  height: 11rem;
+.kongo-item .kongo-icon {
+  width: 18rem;
+  height: 18rem;
   border-radius: 50%;
-  background: #f5f0eb;
+  background: linear-gradient(135deg, #fff5f0, #faeae0);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 6rem;
-  transition: all 0.3s;
-  flex-shrink: 0;
+  font-size: 9rem;
+  border: 0.5rem solid transparent;
+  transition: all 0.2s;
 }
-.tab-item .tab-label {
-  font-size: 6rem;
-  color: #666;
+.kongo-item .kongo-label {
+  font-size: 4.5rem;
+  color: #555;
   font-weight: 500;
   white-space: nowrap;
+  text-align: center;
+  max-width: 24rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.tab-item.active .tab-icon {
-  background: #fff0f0;
-}
-.tab-item.active {
+.kongo-item.active .kongo-icon {
+  background: linear-gradient(135deg, #ffe8df, #ffd5c2);
   border-color: #c62f2f;
-  background: #fff0f0;
+  box-shadow: 0 0.8rem 2.5rem rgba(198,47,47,0.2);
 }
-.tab-item.active .tab-label {
+.kongo-item.active .kongo-label {
   color: #c62f2f;
-  font-weight: 600;
+  font-weight: 700;
+}
+
+/* 浮动搜索角标 */
+.fab-search {
+  position: fixed;
+  right: 5rem;
+  bottom: 7rem;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c62f2f, #e85a3a);
+  box-shadow: 0 2rem 6rem rgba(198,47,47,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  cursor: pointer;
+  border: 1rem solid rgba(255,255,255,0.6);
+}
+.fab-search svg {
+  width: 9rem;
+  height: 9rem;
+  stroke: #fff;
+}
+@media (min-width: 480px) {
+  .fab-search {
+    /* 居中容器内定位 */
+    position: absolute;
+    right: 5rem;
+  }
 }
 
 /* 内容导购模块 */
@@ -391,21 +388,12 @@ body {
     <div class="brand">银发甄选</div>
     <div class="sub-text">创造美好生活</div>
   </div>
-  <div class="search-bar">
-    <div class="search-input">
-      <div class="icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      </div>
-      <input type="text" placeholder="搜索好物" readonly>
-      <div class="voice-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#c62f2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- 筛选标签 -->
-<div class="filter-tabs" id="filterTabs"></div>
+<!-- 筛选金刚位（双列横滑） -->
+<div class="filter-grid-wrap">
+  <div class="filter-grid" id="filterTabs"></div>
+</div>
 
 <!-- 当前场景描述横幅 -->
 <div class="scene-banner" id="sceneBanner">
@@ -563,18 +551,18 @@ const SCENES = [
   { icon: '🎁', name: '孝心好礼', desc: '给爸妈选一份实用、贴心、能长期使用的礼物。', cats: ['血压计','足浴桶','老人鞋','感应夜灯','助听器','营养品'] },
 ];
 
-// 渲染筛选标签
+// 渲染金刚位（双列横滑，每屏 5 列 × 2 行 = 10 个）
 const tabsEl = document.getElementById('filterTabs');
 SCENES.forEach((s, i) => {
   const t = document.createElement('div');
-  t.className = 'tab-item' + (i === 0 ? ' active' : '');
-  t.innerHTML = `<div class="tab-icon"><span>${s.icon}</span></div><div class="tab-label">${s.name}</div>`;
+  t.className = 'kongo-item' + (i === 0 ? ' active' : '');
+  t.innerHTML = `<div class="kongo-icon">${s.icon}</div><div class="kongo-label">${s.name}</div>`;
   t.addEventListener('click', () => selectScene(i, t));
   tabsEl.appendChild(t);
 });
 
 function selectScene(i, el) {
-  document.querySelectorAll('.tab-item').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.kongo-item').forEach(x => x.classList.remove('active'));
   el.classList.add('active');
   const s = SCENES[i];
   document.getElementById('bannerIcon').textContent = s.icon;
@@ -582,12 +570,15 @@ function selectScene(i, el) {
   document.getElementById('bannerDesc').textContent = s.desc;
   const catsEl = document.getElementById('bannerCats');
   catsEl.innerHTML = s.cats.map(c => `<span>${c}</span>`).join('');
-  // 滚动选中项到可见区域
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 }
 
-// 初始化默认场景
 selectScene(0, tabsEl.firstChild);
 </script>
+
+<!-- 浮动搜索角标 -->
+<div class="fab-search" title="搜索好物" onclick="alert('搜索好物')">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+</div>
 </body>
 </html>
