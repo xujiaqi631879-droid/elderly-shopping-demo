@@ -15,6 +15,7 @@ body {
   margin: 0 auto;
   color: #333;
   overflow-x: hidden;
+  position: relative; /* 容器内浮动定位锚点 */
 }
 
 /* 顶部头部 */
@@ -111,34 +112,65 @@ body {
   font-weight: 700;
 }
 
-/* 浮动搜索角标 */
+/* 浮动语音搜索角标 - 固定在 393px 容器内的右下角 */
 .fab-search {
   position: fixed;
-  right: 5rem;
-  bottom: 7rem;
-  width: 18rem;
-  height: 18rem;
-  border-radius: 50%;
+  bottom: 8rem;
+  /* 容器宽 131rem 居中：右边距 = 50vw - 65.5rem；再向内推 5rem */
+  right: calc(50vw - 60.5rem);
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  height: 17rem;
+  padding: 0 5.5rem 0 4rem;
+  border-radius: 12rem;
   background: linear-gradient(135deg, #c62f2f, #e85a3a);
-  box-shadow: 0 2rem 6rem rgba(198,47,47,0.45);
+  box-shadow: 0 2rem 6rem rgba(198,47,47,0.45), 0 0 0 1rem rgba(255,255,255,0.5);
+  z-index: 200;
+  cursor: pointer;
+  color: #fff;
+}
+.fab-search .mic-wrap {
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.22);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 200;
-  cursor: pointer;
-  border: 1rem solid rgba(255,255,255,0.6);
+  position: relative;
+  flex-shrink: 0;
+}
+.fab-search .mic-wrap::before,
+.fab-search .mic-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -1rem;
+  border-radius: 50%;
+  border: 1rem solid rgba(255,255,255,0.55);
+  animation: pulse 1.8s ease-out infinite;
+}
+.fab-search .mic-wrap::after { animation-delay: 0.9s; }
+@keyframes pulse {
+  0%   { transform: scale(0.7); opacity: 0.9; }
+  80%  { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
 }
 .fab-search svg {
-  width: 9rem;
-  height: 9rem;
+  width: 7rem;
+  height: 7rem;
   stroke: #fff;
+  position: relative;
+  z-index: 1;
 }
-@media (min-width: 480px) {
-  .fab-search {
-    /* 居中容器内定位 */
-    position: absolute;
-    right: 5rem;
-  }
+.fab-search .fab-label {
+  font-size: 5rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.3rem;
+}
+@media (max-width: 393px) {
+  .fab-search { right: 5rem; }
 }
 
 /* 内容导购模块 */
@@ -576,9 +608,17 @@ function selectScene(i, el) {
 selectScene(0, tabsEl.firstChild);
 </script>
 
-<!-- 浮动搜索角标 -->
-<div class="fab-search" title="搜索好物" onclick="alert('搜索好物')">
-  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+<!-- 浮动语音搜索 -->
+<div class="fab-search" title="按住说话搜索" onclick="alert('按住说话 · 语音搜索')">
+  <div class="mic-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="2" width="6" height="12" rx="3"/>
+      <path d="M5 11a7 7 0 0 0 14 0"/>
+      <line x1="12" y1="18" x2="12" y2="22"/>
+      <line x1="8" y1="22" x2="16" y2="22"/>
+    </svg>
+  </div>
+  <div class="fab-label">说话搜索</div>
 </div>
 </body>
 </html>
