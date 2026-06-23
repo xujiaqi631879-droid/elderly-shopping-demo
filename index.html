@@ -6,16 +6,18 @@
 <title>适老化专区 - 品质生活，一点就有</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { font-size: 3px; }
+/* 基准字号随视口缩放：1rem ≈ viewport宽度/131，让设计自适应填满屏幕 */
+html { font-size: calc(100vw / 131); }
+html, body { background: #f5f0eb; }
 body {
   font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
   background: #f5f0eb;
-  width: 131rem; /* 393px */
-  min-height: 284rem; /* 852px */
-  margin: 0 auto;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
   color: #333;
   overflow-x: hidden;
-  position: relative; /* 容器内浮动定位锚点 */
+  position: relative;
 }
 
 /* 顶部头部 */
@@ -112,12 +114,11 @@ body {
   font-weight: 700;
 }
 
-/* 浮动语音搜索角标 - 固定在 393px 容器内的右下角 */
+/* 浮动语音搜索角标 - 固定在容器右下 */
 .fab-search {
   position: fixed;
   bottom: 8rem;
-  /* 容器宽 131rem 居中：右边距 = 50vw - 65.5rem；再向内推 5rem */
-  right: calc(50vw - 60.5rem);
+  right: 5rem;
   display: flex;
   align-items: center;
   gap: 2.5rem;
@@ -170,7 +171,7 @@ body {
   letter-spacing: 0.3rem;
 }
 @media (max-width: 393px) {
-  .fab-search { right: 5rem; }
+  .fab-search { right: 4rem; }
 }
 
 /* 内容导购模块 */
