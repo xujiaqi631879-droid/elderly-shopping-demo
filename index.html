@@ -87,41 +87,47 @@ body {
 }
 .search-input .voice-btn svg { width: 6rem; height: 6rem; }
 
-/* 筛选标签栏 */
+/* 筛选标签栏 - 横向滚动 */
 .filter-tabs {
   position: sticky;
   top: 0;
   z-index: 99;
   background: #f5f0eb;
   display: flex;
-  padding: 4rem 2rem;
-  justify-content: space-around;
+  padding: 4rem 3rem;
+  gap: 3rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.05);
 }
+.filter-tabs::-webkit-scrollbar { display: none; }
 .tab-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 2rem;
-  padding: 3rem 2rem;
+  gap: 2.5rem;
+  padding: 3rem 5rem;
   transition: all 0.3s;
   background: #fff;
-  border-radius: 4rem;
+  border-radius: 12rem;
   border: 0.5rem solid #e8e3de;
+  flex-shrink: 0;
 }
 .tab-item .tab-icon {
-  width: 15rem;
-  height: 15rem;
+  width: 11rem;
+  height: 11rem;
   border-radius: 50%;
   background: #f5f0eb;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 7rem;
+  font-size: 6rem;
   transition: all 0.3s;
+  flex-shrink: 0;
 }
 .tab-item .tab-label {
-  font-size: 6.8rem;
+  font-size: 6rem;
   color: #666;
   font-weight: 500;
   white-space: nowrap;
