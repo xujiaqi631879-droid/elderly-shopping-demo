@@ -64,9 +64,9 @@ body {
 .filter-grid {
   display: grid;
   grid-auto-flow: column;
-  grid-template-rows: repeat(2, auto);
-  grid-auto-columns: 25.4rem; /* 5 列贴合 393px：(131rem - 4rem padding) / 5 */
-  gap: 4rem 0;
+  grid-template-rows: repeat(2, 30rem); /* 固定每行 30rem，避免文字换行导致格子高度不一 */
+  grid-auto-columns: 25.4rem;
+  gap: 3rem 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -77,10 +77,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem 1rem;
+  justify-content: flex-start;
+  gap: 1.8rem;
+  padding: 0 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
+  width: 25.4rem;
+  height: 30rem;
+  box-sizing: border-box;
 }
 .kongo-item .kongo-icon {
   width: 18rem;
@@ -93,16 +97,22 @@ body {
   font-size: 9rem;
   border: 0.5rem solid transparent;
   transition: all 0.2s;
+  flex-shrink: 0;
+  line-height: 1;
 }
 .kongo-item .kongo-label {
-  font-size: 4.5rem;
+  font-size: 4rem;
   color: #555;
   font-weight: 500;
-  white-space: nowrap;
   text-align: center;
-  max-width: 24rem;
+  width: 100%;
+  line-height: 1.25;
+  /* 允许换行，最多 2 行后省略 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-all;
 }
 .kongo-item.active .kongo-icon {
   background: linear-gradient(135deg, #ffe8df, #ffd5c2);
