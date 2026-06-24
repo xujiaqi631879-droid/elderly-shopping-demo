@@ -445,7 +445,6 @@ body {
     <span id="bannerName">推荐</span>
   </div>
   <div class="banner-desc" id="bannerDesc">为您精选适老化好物，贴近老人日常需求，点击下方场景标签切换。</div>
-  <div class="banner-cats" id="bannerCats"></div>
 </div>
 
 <!-- 场景化内容导购（占位示意：所有筛选下都展示这4张卡片） -->
@@ -611,8 +610,6 @@ function selectScene(i, el) {
   document.getElementById('bannerIcon').textContent = s.icon;
   document.getElementById('bannerName').textContent = s.name;
   document.getElementById('bannerDesc').textContent = s.desc;
-  const catsEl = document.getElementById('bannerCats');
-  catsEl.innerHTML = s.cats.map(c => `<span>${c}</span>`).join('');
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 }
 
